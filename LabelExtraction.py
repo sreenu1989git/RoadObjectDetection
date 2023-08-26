@@ -3,6 +3,7 @@ from os import walk, getcwd
 from PIL import Image
 import json
 from functools import partial
+from tqdm import tqdm
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -59,13 +60,13 @@ def lbld_img(json_file):
   labeled_images = []
   json_content = open(json_file, 'r')
   j_data = json.load(json_content)
-  for file in j_data:
+  for file in tqdm(j_data):
     labeled_images.append(file['name'])
   return labeled_images
 
 # function to delete the unwanted files.
 def remove_files(folder_path, files_toRemove):
-   for filename in files_toRemove:
+   for filename in tqdm(files_toRemove):
       if os.path.exists(folder_path+filename):
          os.remove(folder_path+filename)
 
@@ -127,9 +128,9 @@ def generate_labels(json_file, label_path, ext_status_file):
   json_content = open(json_file, 'r')
   j_data = json.load(json_content)
 
-  NF = 0 # setting the counter.
+
   # iterating through json objects to search for labels for images.
-  for file in j_data:
+  for file in tqdm(j_data):
     if file['name']+'\n' not in labeled_files:
       """ Open output text files """
       txt_outpath = label_path + file['name'].replace('jpg','txt') # creating text files for saving label data of images with same file name.
@@ -154,10 +155,9 @@ def generate_labels(json_file, label_path, ext_status_file):
             txt_outfile.write(str(cls_id) + " " + " ".join([str(a) for a in bb]) + '\n')
 
       txt_outfile.close() # closing the label file.
-    NF += 1
+    
     label_ext_completed.write(file['name'] + '\n')
-    if NF%100 == 0:
-      print('LE completed for '+str(NF)+' files')
+
   
   label_ext_completed.close() # closing Label Extraction completion status file.
 
