@@ -1,0 +1,6 @@
+train: #add path to train image folder
+val: #add path to train image folder
+
+nc: 10 # number classes in the dataset
+# list of classes in the dataset
+names: ['pedestrian', 'rider', 'car', 'truck', 'bus', 'train', 'motorcycle', 'bicycle', 'traffic light', 'traffic sign']
